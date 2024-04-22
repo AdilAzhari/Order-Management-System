@@ -13,6 +13,11 @@
                     <x-primary-button wire:click="openModal" type="button" class="mb-4">
                         Add Category
                     </x-primary-button>
+                    @if (session()->has('success'))
+                        <div class="bg-green-200 text-green-800 px-4 py-2 mt-4 rounded">
+                            {{ session('success') }}
+                        </div>
+                    @endif
 
                     <div class="overflow-hidden overflow-x-auto mb-4 min-w-full align-middle sm:rounded-md">
                         <table class="min-w-full border divide-y divide-gray-200">
@@ -103,9 +108,11 @@
                                                 <x-primary-button wire:click="editCategory({{ $category->id }})">
                                                     Edit
                                                 </x-primary-button>
-                                                <button wire:click="deleteConfirm('delete', {{ $category->id }})" class="px-4 py-2 text-xs text-red-500 uppercase bg-red-200 rounded-md border border-transparent hover:text-red-700 hover:bg-red-300">
+                                                <button wire:click="deleteConfirm('delete', {{ $category->id }})"
+                                                    class="px-4 py-2 text-xs text-red-500 uppercase bg-red-200 rounded-md border border-transparent hover:text-red-700 hover:bg-red-300">
                                                     Delete
-                                                </button>                                            @endif
+                                                </button>
+                                            @endif
                                         </td>
                                     </tr>
                                 @empty

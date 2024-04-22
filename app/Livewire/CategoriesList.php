@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Livewire\Forms\CategoriesList as FormsCategoriesList;
 use App\Models\Category;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -50,7 +51,7 @@ class CategoriesList extends Component
     public function cancelCategoryEdit()
     {
         $this->form->resetValidation();
-        $this->reset('form.showModal', 'editedCategoryId');
+        $this->reset('editedCategoryId');
     }
     public function toggleIsActive(int $categoryId): void
     {
@@ -77,5 +78,22 @@ class CategoriesList extends Component
         $this->form->category = Category::find($categoryId);
         $this->form->name = $this->form->category->name;
         $this->form->slug = $this->form->category->slug;
+    }
+
+    public function deleteConfirm(string $method, $id = null): void
+    {
+        $this->dispatch('swal:confirm', [
+            'type'   => 'warning',
+            'title'  => 'Are you sure?',
+            'text'   => '',
+            'id'     => $id,
+            'method' => $method,
+        ]);
+    }
+    #[On('delete')]
+    public function delete($id)
+    {
+        Category::findOrFail($id)->delete();
+        return redirect()->route('categories.index')->with('success', 'Category deleted successfully.');
     }
 }

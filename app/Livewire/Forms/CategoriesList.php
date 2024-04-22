@@ -29,4 +29,15 @@ class CategoriesList extends Form
     {
         $this->slug = Str::slug($this->name);
     }
+    public function deleteConfirm(string $method, $id = null): void
+    {
+        $this->dispatch('swal:confirm', [
+            'type'   => 'warning',
+            'title'  => 'Are you sure?',
+            'text'   => '',
+            'id'     => $id,
+            'method' => $method,
+        ]);
+    }
 }
+

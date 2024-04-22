@@ -36,22 +36,21 @@ class CategoriesList extends Component
     public function save()
     {
         $this->form->validate();
-
         if (is_null($this->form->category)) {
+
             $position = Category::max('position') + 1;
             Category::create(array_merge($this->form->only('name', 'slug'), ['position' => $position]));
         } else {
             $this->form->category->update($this->form->only('name', 'slug'));
         }
-
         $this->reset('showModal');
         $this->form->resetValidation();
-        $this->reset('form.showModal', 'form.editedCategoryId');
+        $this->reset('form.showModal', 'editedCategoryId');
     }
     public function cancelCategoryEdit()
     {
         $this->form->resetValidation();
-        $this->form->reset('form.editedCategoryId');
+        $this->reset('form.showModal', 'editedCategoryId');
     }
     public function toggleIsActive(int $categoryId): void
     {

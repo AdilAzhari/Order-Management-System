@@ -4,7 +4,6 @@ namespace App\Livewire\Forms;
 
 use App\Models\Category;
 use Illuminate\Support\Collection;
-use Livewire\Attributes\Validate;
 use Livewire\Form;
 use Illuminate\Support\Str;
 

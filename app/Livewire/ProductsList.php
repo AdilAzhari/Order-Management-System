@@ -2,15 +2,25 @@
 
 namespace App\Livewire;
 
+use App\Exports\ProductsExport;
 use App\Livewire\Forms\ProductForm;
 use App\Models\{Category, Country, Product};
+use GuzzleHttp\Psr7\Response;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ProductsList extends Component
 {
     use WithPagination;
     public ProductForm $form;
+    #[Url()]
+    public string $sortDirection = 'asc';
+    public array $selected = [];
+
     public function mount(): void
     {
         $this->form->categories = Category::pluck('name', 'id')->toArray();
@@ -38,18 +48,57 @@ class ProductsList extends Component
                     ->when($column == 'name', fn ($products) => $products->where('products.' . $column, 'LIKE', '%' . $value . '%'));
             }
         }
-        $products->orderBy($this->form->sortColumn, $this->form->sortDirection);
+        $products->orderBy($this->form->sortColumn, $this->sortDirection);
         return view('livewire.products-list', [
             'products' => $products->paginate(10),
         ]);
     }
     public function sortByColumn(string $column): void
     {
-        if ($this->sortColumn == $column) {
-            $this->form->sortDirection = $this->sortDirection == 'asc' ? 'desc' : 'asc';
+        if ($this->form->sortColumn == $column) {
+            $this->sortDirection = $this->sortDirection == 'asc' ? 'desc' : 'asc';
         } else {
-            $this->reset('sortDirection');
+            $this->reset('form.sortDirection');
             $this->form->sortColumn = $column;
         }
+    }
+    public function deleteConfirm(string $method, $id = null): void
+    {
+        $this->dispatch('swal:confirm', [
+            'type'  => 'warning',
+            'title' => 'Are you sure?',
+            'text'  => '',
+            'id'    => $id,
+            'method' => $method,
+        ]);
+    }
+
+    #[On('delete')]
+    public function delete(int $id): void
+    {
+        $product = Product::findOrFail($id);
+
+        $product->delete();
+    }
+
+    public function getSelectedCountProperty(): int
+    {
+        return count($this->selected);
+    }
+
+    #[On('deleteSelected')]
+    public function deleteSelected(): void
+    {
+        $products = Product::whereIn('id', $this->selected)->get();
+
+        $products->each->delete();
+
+        $this->reset('form.selected');
+    }
+    public function export(string $format): BinaryFileResponse
+    {
+        abort_if(!in_array($format, ['csv', 'xlsx', 'pdf']), Response::HTTP_NOT_FOUND);
+
+        return Excel::download(new ProductsExport($this->selected), 'products.' . $format);
     }
 }

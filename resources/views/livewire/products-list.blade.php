@@ -17,15 +17,61 @@
                                 Create Product
                             </a>
                         </div>
+                        <button type="button" wire:click="deleteConfirm('deleteSelected')" wire:loading.attr="disabled"
+                            @disabled(!$this->selectedCount)
+                            class="px-4 py-2 mr-5 text-xs text-red-500 uppercase bg-red-200 rounded-md border border-transparent hover:text-red-700 hover:bg-red-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                            Delete Selected
+                        </button>
+                        <x-primary-button wire:click="export('csv')">CSV</x-primary-button>
+                        <x-primary-button wire:click="export('xlsx')">XLSX</x-primary-button>
+                        <x-primary-button wire:click="export('pdf')">PDF</x-primary-button>
                     </div>
 
                     <div class="overflow-hidden overflow-x-auto mb-4 min-w-full align-middle sm:rounded-md">
                         <table class="min-w-full border divide-y divide-gray-200">
                             <thead>
                                 <tr>
+                                    <th class="px-6 py-3 text-left bg-gray-50">
+                                    </th>
+                                    <th wire:click="sortByColumn('products.name')"
+                                        class="px-6 py-3 text-left bg-gray-50">
+                                        <span
+                                            class="text-xs font-medium tracking-wider leading-4 text-gray-500 uppercase">Name</span>
+                                        @if ($form->sortColumn == 'products.name')
+                                            @include('svg.sort-' . $sortDirection)
+                                        @else
+                                            @include('svg.sort')
+                                        @endif
+                                    </th>
+                                    <th class="px-6 py-3 text-left bg-gray-50">
+                                        <span
+                                            class="text-xs font-medium tracking-wider leading-4 text-gray-500 uppercase">Categories</span>
+                                    </th>
+                                    <th wire:click="sortByColumn('countryName')" class="px-6 py-3 text-left bg-gray-50">
+                                        <span
+                                            class="text-xs font-medium tracking-wider leading-4 text-gray-500 uppercase">Country</span>
+                                        @if ($form->sortColumn == 'countryName')
+                                            @include('svg.sort-' . $sortDirection)
+                                        @else
+                                            @include('svg.sort')
+                                        @endif
+                                    </th>
+                                    <th wire:click="sortByColumn('price')" class="px-6 py-3 w-32 text-left bg-gray-50">
+                                        <span
+                                            class="text-xs font-medium tracking-wider leading-4 text-gray-500 uppercase">Price</span>
+                                        @if ($form->sortColumn == 'price')
+                                            @include('svg.sort-' . $sortDirection)
+                                        @else
+                                            @include('svg.sort')
+                                        @endif
+                                    </th>
+                                    <th class="px-6 py-3 text-left bg-gray-50">
+                                    </th>
+                                </tr>
+                                <tr>
                                     <td></td>
                                     <td class="px-2 py-2">
-                                        <input wire:model.live.debounce="searchColumns.name" type="text"
+                                        <input wire:model.live.debounce="form.searchColumns.name" type="text"
                                             placeholder="Search..."
                                             class="w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
                                     </td>
@@ -112,7 +158,7 @@
                                                 class="inline-flex items-center px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase bg-gray-800 rounded-md border border-transparent hover:bg-gray-700">
                                                 Edit
                                             </a>
-                                            <button
+                                            <button wire:click="deleteConfirm('delete', {{ $product->id }})"
                                                 class="px-4 py-2 text-xs text-red-500 uppercase bg-red-200 rounded-md border border-transparent hover:text-red-700 hover:bg-red-300">
                                                 Delete
                                             </button>

@@ -6,6 +6,7 @@ use App\Exports\ProductsExport;
 use App\Livewire\Forms\ProductForm;
 use App\Models\{Category, Country, Product};
 use GuzzleHttp\Psr7\Response;
+use Illuminate\Http\Response as HttpResponse;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -97,7 +98,7 @@ class ProductsList extends Component
     }
     public function export(string $format): BinaryFileResponse
     {
-        abort_if(!in_array($format, ['csv', 'xlsx', 'pdf']), Response::HTTP_NOT_FOUND);
+        abort_if(!in_array($format, ['csv', 'xlsx', 'pdf']), HttpResponse::HTTP_NOT_FOUND);
 
         return Excel::download(new ProductsExport($this->selected), 'products.' . $format);
     }

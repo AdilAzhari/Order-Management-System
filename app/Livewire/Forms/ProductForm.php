@@ -19,4 +19,5 @@ class ProductForm extends Form
     public string $sortColumn = 'products.name';
 
     public string $sortDirection = 'asc';
+
 }

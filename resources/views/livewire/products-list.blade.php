@@ -30,7 +30,7 @@
                                             class="w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
                                     </td>
                                     <td class="px-2 py-1">
-                                        <select wire:model.live="searchColumns.category_id"
+                                        <select wire:model.live="form.searchColumns.category_id"
                                             class="w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                             <option value="">-- choose category --</option>
                                             @foreach ($form->categories as $id => $category)
@@ -39,7 +39,7 @@
                                         </select>
                                     </td>
                                     <td class="px-2 py-1">
-                                        <select wire:model.live="searchColumns.country_id"
+                                        <select wire:model.live="form.searchColumns.country_id"
                                             class="w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                             <option value="">-- choose country --</option>
                                             @foreach ($form->countries as $id => $country)
@@ -50,12 +50,12 @@
                                     <td class="px-2 py-1 text-sm">
                                         <div>
                                             From
-                                            <input wire:model.live.debounce="searchColumns.price.0" type="number"
+                                            <input wire:model.live.debounce="form.searchColumns.price.0" type="number"
                                                 class="mr-2 w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
                                         </div>
                                         <div>
                                             to
-                                            <input wire:model.live.debounce="searchColumns.price.1" type="number"
+                                            <input wire:model.live.debounce="form.searchColumns.price.1" type="number"
                                                 class="w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
                                         </div>
                                     </td>

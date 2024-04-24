@@ -3,7 +3,7 @@
 namespace App\Livewire;
 
 use App\Livewire\Forms\ProductForm;
-use App\Models\{Category,Country,Product};
+use App\Models\{Category, Country, Product};
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -42,5 +42,14 @@ class ProductsList extends Component
         return view('livewire.products-list', [
             'products' => $products->paginate(10),
         ]);
+    }
+    public function sortByColumn(string $column): void
+    {
+        if ($this->sortColumn == $column) {
+            $this->form->sortDirection = $this->sortDirection == 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->reset('sortDirection');
+            $this->form->sortColumn = $column;
+        }
     }
 }

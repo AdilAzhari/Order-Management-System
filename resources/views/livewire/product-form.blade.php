@@ -61,6 +61,12 @@
                                 Save
                             </x-primary-button>
                         </div>
+                        <div class="mt-4">
+                            <x-secondary-button wire:click="cancelEdit">
+                                Cancel Edit
+                            </x-secondary-button>
+                        </div>
+
                     </form>
 
                 </div>

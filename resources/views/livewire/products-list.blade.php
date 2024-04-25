@@ -1,3 +1,9 @@
+@error('orderexist')
+    <div class="p-3 mb-4 text-green-700 bg-green-200">
+        {!! $message !!}
+    </div>
+@enderror
+
 <div>
     <x-slot name="header">
         <h2 class="text-xl font-semibold leading-tight text-gray-800">

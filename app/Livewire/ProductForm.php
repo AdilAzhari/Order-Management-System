@@ -57,4 +57,30 @@ class ProductForm extends Component
 
         $this->listsForFields['categories'] = Category::active()->pluck('name', 'id')->toArray();
     }
+    public function save(): void
+    {
+        $this->validate();
+
+        if (is_null($this->product)) {
+
+            $this->product = Product::create(
+                array_merge(
+                    $this->only('name', 'description', 'country_id'),
+                    ['price' => $this->price * 100]
+                )
+            );
+        } else {
+
+            $this->product->update(
+                array_merge(
+                    $this->only('name', 'description', 'country_id'),
+                    ['price' => $this->price * 100]
+            ));
+            dd($this->price);
+        }
+    }
+    function cancelEdit()
+    {
+        return redirect()->route('products.index');
+    }
 }

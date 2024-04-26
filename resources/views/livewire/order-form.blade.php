@@ -9,6 +9,18 @@
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
+                    @if ($errors->any())
+                        <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative"
+                            role="alert">
+                            <strong class="font-bold">Whoops! Looks like your form has a case of the wiggles!</strong>
+                            <ul class="list-disc pl-5 mt-2">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                            <p class="mt-2 text-right text-sm">Try smoothing things out and submit again. </p>
+                        </div>
+                    @endif
 
                     <form wire:submit.prevent="save">
                         @csrf
@@ -25,7 +37,7 @@
                             <x-input-label class="mb-1" for="order_date" :value="__('Order date')" />
 
                             <input x-data x-init="new Pikaday({ field: $el, format: 'MM/DD/YYYY' })" type="text" id="order_date"
-                                wire:model.blur="order_date" autocomplete="off"
+                                wire:model.lazy="order_date" autocomplete="off"
                                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
                             <x-input-error :messages="$errors->get('order_date')" class="mt-2" />
                         </div>
@@ -44,7 +56,7 @@
                                 <th class="px-6 py-3 w-56 text-left bg-gray-50"></th>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200 divide-solid">
-                                {{-- <tr>
+                                <tr>
                                     <td class="px-6 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
                                         Product Name
                                     </td>
@@ -60,7 +72,7 @@
                                             Delete
                                         </button>
                                     </td>
-                                </tr> --}}
+                                </tr>
                                 @forelse($orderProducts as $index => $orderProduct)
                                     <tr>
                                         <td class="px-6 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
@@ -75,7 +87,7 @@
                                             @else
                                                 <select name="orderProducts[{{ $index }}][product_id]"
                                                     class="focus:outline-none w-full border {{ $errors->has('$orderProducts.' . $index) ? 'border-red-500' : 'border-indigo-500' }} rounded-md p-1"
-                                                    wire:model.live="orderProducts.{{ $index }}.product_id">
+                                                    wire:model="orderProducts.{{ $index }}.product_id">
                                                     <option value="">-- choose product --</option>
                                                     @foreach ($this->allProducts as $product)
                                                         <option value="{{ $product->id }}">
@@ -106,17 +118,19 @@
                                         </td>
                                         <td class="px-6 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
                                             @if ($orderProduct['is_saved'])
-                                                <x-primary-button wire:click="editProduct({{ $index }})">
+                                                <x-primary-button
+                                                    wire:click.prevent="editProduct({{ $index }})">
                                                     Edit
                                                 </x-primary-button>
                                             @elseif($orderProduct['product_id'])
-                                                <x-primary-button wire:click="saveProduct({{ $index }})">
+                                                <x-primary-button
+                                                    wire:click.prevent="saveProduct({{ $index }})">
                                                     Save
                                                 </x-primary-button>
                                             @endif
                                             <button
                                                 class="px-4 py-2 ml-1 text-xs text-red-500 uppercase bg-red-200 rounded-md border border-transparent hover:text-red-700 hover:bg-red-300"
-                                                wire:click="removeProduct({{ $index }})">
+                                                wire:click.prevent="removeProduct({{ $index }})">
                                                 Delete
                                             </button>
                                         </td>
@@ -132,7 +146,7 @@
                             </tbody>
                         </table>
                         <div class="mt-3">
-                            <x-primary-button wire:click="addProduct">+ Add Product</x-primary-button>
+                            <x-primary-button wire:click.prevent="addProduct">+ Add Product</x-primary-button>
                         </div>
                         {{-- End Order Products --}}
 
@@ -140,17 +154,17 @@
                             <table>
                                 <tr>
                                     <th class="text-left p-2">Subtotal</th>
-                                    <td class="p-2">${{ number_format($subtotal / 100, 2) }}</td>
+                                    <td class="p-2">${{ number_format($order->subtotal / 100, 2) }}</td>
                                 </tr>
                                 <tr class="text-left border-t border-gray-300">
                                     <th class="p-2">Taxes ({{ $taxesPercent }}%)</th>
                                     <td class="p-2">
-                                        ${{ number_format($taxes / 100, 2) }}
+                                        ${{ number_format($order->taxes / 100, 2) }}
                                     </td>
                                 </tr>
                                 <tr class="text-left border-t border-gray-300">
                                     <th class="p-2">Total</th>
-                                    <td class="p-2">${{ number_format($total / 100, 2) }}</td>
+                                    <td class="p-2">${{ number_format($order->total / 100, 2) }}</td>
                                 </tr>
                             </table>
                         </div>

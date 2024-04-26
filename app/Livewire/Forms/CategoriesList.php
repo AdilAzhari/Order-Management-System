@@ -39,4 +39,3 @@ class CategoriesList extends Form
         ]);
     }
 }
-

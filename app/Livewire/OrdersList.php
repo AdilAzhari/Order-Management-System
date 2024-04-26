@@ -118,7 +118,7 @@ class OrdersList extends Component
             }
         }
 
-        $orders->each->delete();
+        $this->orders->each->delete();
 
         $this->reset('selected');
     }

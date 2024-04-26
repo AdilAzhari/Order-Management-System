@@ -40,6 +40,16 @@ class OrderForm extends Component
             $this->subtotal = $this->order->subtotal;
             $this->taxes = $this->order->taxes;
             $this->total = $this->order->total;
+
+            foreach ($this->order->products()->get() as $product) {
+                $this->orderProducts[] = [
+                    'product_id' => $product->id,
+                    'quantity' => $product->pivot->quantity,
+                    'product_name' => $product->name,
+                    'product_price' => $product->pivot->price,
+                    'is_saved' => true,
+                ];
+            }
         } else {
             $this->order_date = today();
         }
@@ -134,7 +144,6 @@ class OrderForm extends Component
                 return;
             }
         }
-
         $this->orderProducts[$index]['is_saved'] = false;
     }
 
